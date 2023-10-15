@@ -51,7 +51,7 @@ public class CollectTiles : MonoBehaviour
     }
     private void MoveToBoxAndCheckCollect()
     {
-        if (Input.GetMouseButtonDown(0) && currentHoveredTile != null)
+        if (Input.GetMouseButtonUp(0) && currentHoveredTile != null)
         {
             for (int i = 0; i < box.Length; i++)
             {
@@ -62,7 +62,7 @@ public class CollectTiles : MonoBehaviour
                     box[i + 1] = currentHoveredTile;
                     currentHoveredTile.transform.position = boxTransforms[i + 1].position;
                     CheckLose();
-                    DontTouch();
+                    StartCoroutine(DontTouch());
                     break;
                 }
                 else if (box[i + 2] != null && box[i + 1].name == currentHoveredTile.name)
@@ -70,9 +70,9 @@ public class CollectTiles : MonoBehaviour
                     BackTileFromBox(i + 2, box.Length);
                     box[i + 2] = currentHoveredTile;
                     currentHoveredTile.transform.position = boxTransforms[i + 2].position;
-                    CollectTileFromBox(i, i + 2);
-                    if (box[i + 3] != null) ForwardTileFromBox(i + 3, box.Length);
-                    DontTouch();
+                    StartCoroutine(CollectTileFromBox(i, i + 2));
+                    if (box[i + 3] != null)StartCoroutine(ForwardTileFromBox(i + 3, box.Length));
+                    StartCoroutine(DontTouch());
                     break;
                 }
                 else if (box[i] == null)
@@ -83,11 +83,11 @@ public class CollectTiles : MonoBehaviour
                     {
                         if (box[i - 2].name == currentHoveredTile.name)
                         {
-                            CollectTileFromBox(i - 2, i);
+                           StartCoroutine(CollectTileFromBox(i - 2, i));
                         }
                         else CheckLose();
                     }
-                    DontTouch();
+                    StartCoroutine(DontTouch());
                     break;
                 }
             }
@@ -95,19 +95,21 @@ public class CollectTiles : MonoBehaviour
         }
     }
 
-    private void CollectTileFromBox(int start, int end)
+    private IEnumerator CollectTileFromBox(int start, int end)
     {
         for (int i = start; i <= end; i++)
         {
+            yield return new WaitForSeconds(0.1f);
             box[i].SetActive(false);
             box[i] = null;
         }
         CheckWin();
     }
-    private void ForwardTileFromBox(int start, int end)
+    private IEnumerator ForwardTileFromBox(int start, int end)
     {
         for (int i = start; i < end; i++)
         {
+            yield return new WaitForSeconds(0.1f);
             if (box[i] == null) continue;
             box[i - 3] = box[i];
             box[i - 3].transform.position = boxTransforms[i - 3].position;
@@ -124,18 +126,32 @@ public class CollectTiles : MonoBehaviour
         }
     }
 
-    private void DontTouch()
+    private IEnumerator ShrinkTile(GameObject tile)
+    {
+        if (tile != null)
+        {
+            float t = 0;
+            while (t < 1)
+            {
+                t += Time.deltaTime * 0.01f;
+                tile.transform.localScale = Vector3.Lerp(tile.transform.localScale, tile.transform.localScale - new Vector3(0.5f, 0.5f, 0.5f), t);
+                if (tile.transform.localScale.x < 2f) yield break;
+                yield return null;
+            }
+            
+        }
+    }
+    private IEnumerator DontTouch()
     {
         foreach (var tile in box)
         {
-            if (tile != null)
+            if (tile != null && tile.tag != "Untagged")
             {
                 tile.tag = "Untagged";
+                yield return StartCoroutine(ShrinkTile(tile));
             }
-            else break;
         }
     }
-
     private void CheckWin()
     {
         foreach (var tile in spawnTiles.tileList)
