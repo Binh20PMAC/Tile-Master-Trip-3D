@@ -27,6 +27,13 @@ public class CollectTiles : MonoBehaviour
         {
             if (hit.transform.gameObject.tag == "Tile" && hit.collider.gameObject != currentHoveredTile)
             {
+                if (currentHoveredTile != null)
+                {
+                    if (currentHoveredTile.transform.localScale != originalScale)
+                    {
+                        currentHoveredTile.transform.localScale = originalScale;
+                    }
+                }
                 originalScale = hit.collider.gameObject.transform.localScale;
                 currentHoveredTile = hit.collider.gameObject;
                 currentHoveredTile.transform.localScale += new Vector3(0.2f, 0.2f, 0.2f);
@@ -50,11 +57,13 @@ public class CollectTiles : MonoBehaviour
                 }
                 else
                 {
-                    if (box[i] != null && box[i + 1] != null && box[i].name == currentHoveredTile.name && box[i + 1].name != currentHoveredTile.name)
+                    if (box[i] != null && box[i].name != currentHoveredTile.name) continue;
+                    else if (box[i] != null && box[i + 1] != null && box[i].name == currentHoveredTile.name && box[i + 1].name != currentHoveredTile.name)
                     {
                         BackTileFromBox(i + 1, box.Length);
                         box[i + 1] = currentHoveredTile;
                         currentHoveredTile.transform.position = boxTransforms[i + 1].position;
+                        DontTouch();
                         break;
                     }
                     else if (box[i + 2] != null && box[i + 1].name == currentHoveredTile.name)
@@ -67,6 +76,7 @@ public class CollectTiles : MonoBehaviour
                         }
                         CollectTileFromBox(i, i + 2);
                         if (box[i + 3] != null) ForwardTileFromBox(i + 3, box.Length);
+                        DontTouch();
                         break;
                     }
                     else if (box[i] == null)
@@ -75,11 +85,12 @@ public class CollectTiles : MonoBehaviour
                         currentHoveredTile.transform.position = boxTransforms[i].position;
                         if (i >= 2)
                         {
-                            if (box[i - 1].name == currentHoveredTile.name)
+                            if (box[i - 2].name == currentHoveredTile.name)
                             {
                                 CollectTileFromBox(i - 2, i);
                             }
                         }
+                        DontTouch();
                         break;
                     }
                 }
@@ -113,6 +124,18 @@ public class CollectTiles : MonoBehaviour
             if (box[i] == null) continue;
             box[i + 1] = box[i];
             box[i + 1].transform.position = boxTransforms[i + 1].position;
+        }
+    }
+
+    private void DontTouch()
+    {
+        foreach (var tile in box)
+        {
+            if (tile != null)
+            {
+                tile.tag = "Untagged";
+            }
+            else break;
         }
     }
 }

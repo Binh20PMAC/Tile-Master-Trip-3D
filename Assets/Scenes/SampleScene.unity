@@ -455,8 +455,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 1712734058490115, guid: 776c9fa481a85294f800edd72e504f21, type: 3}
-  level: 1
   tileList: []
+  levelDataJSON: {fileID: 4900000, guid: 2091f071a393e1347acead1d1d288476, type: 3}
+  levelDataList:
+    Level: 0
+    TextureBlue: []
+    TexturePink: []
+    TexturePurple: []
+    TextureRed: []
+    TextureWhite: []
+    TextureYellow: []
 --- !u!1 &832377872
 GameObject:
   m_ObjectHideFlags: 0
