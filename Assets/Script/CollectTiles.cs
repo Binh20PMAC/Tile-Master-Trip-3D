@@ -59,7 +59,7 @@ public class CollectTiles : MonoBehaviour
                     }
                     else if (box[i + 2] != null && box[i + 1].name == currentHoveredTile.name)
                     {
-                        if (box[i + 3] != null)
+                        if (box[i + 2] != null)
                         {
                             BackTileFromBox(i + 2, box.Length);
                             box[i + 2] = currentHoveredTile;
@@ -100,7 +100,7 @@ public class CollectTiles : MonoBehaviour
     {
         for (int i = start; i < end; i++)
         {
-            if (box[i] != null) break;
+            if (box[i] == null) continue;
             box[i - 3] = box[i];
             box[i - 3].transform.position = boxTransforms[i - 3].position;
             box[i] = null;
