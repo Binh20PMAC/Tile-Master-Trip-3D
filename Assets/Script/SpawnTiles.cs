@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class SpawnTiles : MonoBehaviour
     [SerializeField] private List<GameObject> tileList;
     [SerializeField] private TextAsset levelDataJSON;
     [SerializeField] private LevelData levelDataList;
+    private List<string> colorOptions = new List<string>();
+    private string[] curentColorOptions = new string[] { "TextureBlue", "TexturePink", "TexturePurple", "TextureRed", "TextureWhite", "TextureYellow" };
     private string filePath;
     void Start()
     {
@@ -22,7 +25,7 @@ public class SpawnTiles : MonoBehaviour
         filePath = AssetDatabase.GetAssetPath(levelDataJSON);
         levelDataList = JsonUtility.FromJson<LevelData>(levelDataJSON.text);
     }
-    public string GetRandomTexture(List<string> textureList)
+    public string GetRandomLevelTexture(List<string> textureList)
     {
         if (textureList == null || textureList.Count == 0)
         {
@@ -34,23 +37,32 @@ public class SpawnTiles : MonoBehaviour
     }
     public string GetRandomColorTexture()
     {
-        string[] colorOptions = new string[] { "TextureBlue", "TexturePink", "TexturePurple", "TextureRed", "TextureWhite", "TextureYellow" };
-        string randomColor = colorOptions[Random.Range(0, colorOptions.Length)];
-
+        if (colorOptions.Count == 0)
+        {
+            colorOptions = curentColorOptions.ToList();
+            GetRandomColorTexture();
+        }
+        string randomColor = colorOptions[Random.Range(0, colorOptions.Count)];
         switch (randomColor)
         {
             case "TextureBlue":
-                return GetRandomTexture(levelDataList.TextureBlue);
+                colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(levelDataList.TextureBlue);
             case "TexturePink":
-                return GetRandomTexture(levelDataList.TexturePink);
+                colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(levelDataList.TexturePink);
             case "TexturePurple":
-                return GetRandomTexture(levelDataList.TexturePurple);
+                colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(levelDataList.TexturePurple);
             case "TextureRed":
-                return GetRandomTexture(levelDataList.TextureRed);
+                colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(levelDataList.TextureRed);
             case "TextureWhite":
-                return GetRandomTexture(levelDataList.TextureWhite);
+                colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(levelDataList.TextureWhite);
             case "TextureYellow":
-                return GetRandomTexture(levelDataList.TextureYellow);
+                colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(levelDataList.TextureYellow);
             default:
                 return null;
         }
