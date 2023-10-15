@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class CollectTiles : MonoBehaviour
@@ -8,6 +10,8 @@ public class CollectTiles : MonoBehaviour
     [SerializeField] private GameObject currentHoveredTile = null;
     [SerializeField] private Transform[] boxTransforms;
     [SerializeField] private GameObject[] box;
+    [SerializeField] private bool checkWin = false;
+    [SerializeField] SpawnTiles spawnTiles;
     private Vector3 originalScale;
 
     private void Start()
@@ -17,7 +21,7 @@ public class CollectTiles : MonoBehaviour
     private void Update()
     {
         HoverScale();
-        MoveToBox();
+        MoveToBoxAndCheckCollect();
     }
     private void HoverScale()
     {
@@ -45,54 +49,46 @@ public class CollectTiles : MonoBehaviour
             }
         }
     }
-    private void MoveToBox()
+    private void MoveToBoxAndCheckCollect()
     {
         if (Input.GetMouseButtonDown(0) && currentHoveredTile != null)
         {
             for (int i = 0; i < box.Length; i++)
             {
-                if (i >= 7)
+                if (box[i] != null && box[i].name != currentHoveredTile.name) continue;
+                else if (box[i] != null && box[i + 1] != null && box[i].name == currentHoveredTile.name && box[i + 1].name != currentHoveredTile.name)
                 {
-                    Debug.Log("You lose");
+                    BackTileFromBox(i + 1, box.Length);
+                    box[i + 1] = currentHoveredTile;
+                    currentHoveredTile.transform.position = boxTransforms[i + 1].position;
+                    CheckLose();
+                    DontTouch();
+                    break;
                 }
-                else
+                else if (box[i + 2] != null && box[i + 1].name == currentHoveredTile.name)
                 {
-                    if (box[i] != null && box[i].name != currentHoveredTile.name) continue;
-                    else if (box[i] != null && box[i + 1] != null && box[i].name == currentHoveredTile.name && box[i + 1].name != currentHoveredTile.name)
+                    BackTileFromBox(i + 2, box.Length);
+                    box[i + 2] = currentHoveredTile;
+                    currentHoveredTile.transform.position = boxTransforms[i + 2].position;
+                    CollectTileFromBox(i, i + 2);
+                    if (box[i + 3] != null) ForwardTileFromBox(i + 3, box.Length);
+                    DontTouch();
+                    break;
+                }
+                else if (box[i] == null)
+                {
+                    box[i] = currentHoveredTile;
+                    currentHoveredTile.transform.position = boxTransforms[i].position;
+                    if (i >= 2)
                     {
-                        BackTileFromBox(i + 1, box.Length);
-                        box[i + 1] = currentHoveredTile;
-                        currentHoveredTile.transform.position = boxTransforms[i + 1].position;
-                        DontTouch();
-                        break;
-                    }
-                    else if (box[i + 2] != null && box[i + 1].name == currentHoveredTile.name)
-                    {
-                        if (box[i + 2] != null)
+                        if (box[i - 2].name == currentHoveredTile.name)
                         {
-                            BackTileFromBox(i + 2, box.Length);
-                            box[i + 2] = currentHoveredTile;
-                            currentHoveredTile.transform.position = boxTransforms[i + 2].position;
+                            CollectTileFromBox(i - 2, i);
                         }
-                        CollectTileFromBox(i, i + 2);
-                        if (box[i + 3] != null) ForwardTileFromBox(i + 3, box.Length);
-                        DontTouch();
-                        break;
+                        else CheckLose();
                     }
-                    else if (box[i] == null)
-                    {
-                        box[i] = currentHoveredTile;
-                        currentHoveredTile.transform.position = boxTransforms[i].position;
-                        if (i >= 2)
-                        {
-                            if (box[i - 2].name == currentHoveredTile.name)
-                            {
-                                CollectTileFromBox(i - 2, i);
-                            }
-                        }
-                        DontTouch();
-                        break;
-                    }
+                    DontTouch();
+                    break;
                 }
             }
 
@@ -106,6 +102,7 @@ public class CollectTiles : MonoBehaviour
             box[i].SetActive(false);
             box[i] = null;
         }
+        CheckWin();
     }
     private void ForwardTileFromBox(int start, int end)
     {
@@ -137,5 +134,32 @@ public class CollectTiles : MonoBehaviour
             }
             else break;
         }
+    }
+
+    private void CheckWin()
+    {
+        foreach (var tile in spawnTiles.tileList)
+        {
+            if (tile.activeInHierarchy)
+            {
+                checkWin = false;
+                break;
+            }
+            else checkWin = true;
+        }
+        if (checkWin)
+        {
+            ++spawnTiles.levelDataList.Level;
+            string updatedJson = JsonUtility.ToJson(spawnTiles.levelDataList);
+            File.WriteAllText(Application.dataPath + "/Resources/LevelData.json", updatedJson);
+            AssetDatabase.Refresh();
+        }
+    }
+
+    private void CheckLose()
+    {
+        int index = 0;
+        foreach (var tile in box) if (tile != null) index++;
+        if (index >= 8) Debug.Log("You Lose");
     }
 }

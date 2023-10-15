@@ -752,6 +752,7 @@ MonoBehaviour:
   - {fileID: 1570623238}
   - {fileID: 1655766643}
   box: []
+  spawnTiles: {fileID: 791680671}
 --- !u!1 &1224525652
 GameObject:
   m_ObjectHideFlags: 0

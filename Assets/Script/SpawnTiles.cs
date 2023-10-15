@@ -8,12 +8,12 @@ using UnityEngine;
 public class SpawnTiles : MonoBehaviour
 {
     [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private List<GameObject> tileList;
+    [SerializeField] public List<GameObject> tileList;
     [SerializeField] private TextAsset levelDataJSON;
-    [SerializeField] private LevelData levelDataList;
+    [SerializeField] public LevelData levelDataList;
     private List<string> colorOptions = new List<string>();
     private string[] curentColorOptions = new string[] { "TextureBlue", "TexturePink", "TexturePurple", "TextureRed", "TextureWhite", "TextureYellow" };
-    private string filePath;
+    public string filePath;
     void Start()
     {
         LoadLevelData();
