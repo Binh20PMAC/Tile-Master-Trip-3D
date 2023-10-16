@@ -173,7 +173,6 @@ public class CollectTiles : MonoBehaviour
         if (checkWin)
         {
             ++spawnTiles.GetLevelDataList().Level;
-            uiManager.SetStar(++spawnTiles.GetLevelDataList().Level);
             string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());
             File.WriteAllText(spawnTiles.GetFilePath(), updatedJson);
             AssetDatabase.Refresh();

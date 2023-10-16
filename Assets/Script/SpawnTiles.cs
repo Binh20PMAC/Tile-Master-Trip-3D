@@ -79,7 +79,7 @@ public class SpawnTiles : MonoBehaviour
     private void SpawnTilesPrefab()
     {
         float x = -3f;
-        float z = 6f;
+        float z = 5f;
         float size = tilePrefab.transform.position.x + 1f;
         string nameTexture = GetRandomColorTexture();
         for (int i = 1; i <= levelDataList.Level * 9; i++)
