@@ -94,8 +94,8 @@ public class SpawnTiles : MonoBehaviour
         {
             randomPosition = new Vector3(
                 Random.Range(-4f, 4f),
-                Random.Range(2f, 4f),
-                Random.Range(-2f, 7f)
+                Random.Range(1f, 3f),
+                Random.Range(-2f, 8f)
             );
             Collider[] colliders = Physics.OverlapBox(randomPosition, collisionSize / 2);
 
@@ -107,6 +107,7 @@ public class SpawnTiles : MonoBehaviour
     private void SpawnPositonTilesPrefabLevel1(GameObject tile, ref float x, ref float z)
     {
         tile.transform.localPosition = new Vector3(x, 2f, z);
+        tile.transform.rotation = Quaternion.identity;
         if (x > 2f)
         {
             z -= 3f;
