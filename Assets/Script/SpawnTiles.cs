@@ -64,37 +64,58 @@ public class SpawnTiles : MonoBehaviour
                 colorOptions.Remove(randomColor);
                 return GetRandomLevelTexture(levelDataList.TextureYellow);
             default:
-                return null;
+                return GetRandomColorTexture();
         }
     }
     private void SpawnTilesPrefab()
     {
         float x = -3f;
         float z = 6f;
+        float size = tilePrefab.transform.position.x + 1f;
         string nameTexture = GetRandomColorTexture();
         for (int i = 1; i <= levelDataList.Level * 9; i++)
         {
-            GameObject newTile = Instantiate(tilePrefab, transform);
+            Vector3 spawnPosition = FindValidSpawnPosition(new Vector3(size, size, size));
+            GameObject newTile = Instantiate(tilePrefab, spawnPosition, Quaternion.Euler(0, Random.Range(0, 360), 0));
             newTile.name = nameTexture;
             tileList.Add(newTile);
-            newTile.transform.localPosition = new Vector3(x, 2f, z);
             newTile.GetComponent<Renderer>().material.mainTexture = Resources.Load<Texture>("tiles/" + nameTexture);
-            if (i % 3 == 0)
-            {
-                nameTexture = GetRandomColorTexture();
-            }
-            if (x > 2f)
-            {
-                z -= 3f;
-                x = -3f;
-            }
-            else
-            {
-                x += 3f;
-            }
+            if (i % 3 == 0) nameTexture = GetRandomColorTexture();
+            if (levelDataList.Level != 1) continue;
+            SpawnPositonTilesPrefabLevel1(newTile, ref x, ref z);
         }
     }
+    private Vector3 FindValidSpawnPosition(Vector3 collisionSize)
+    {
+        Vector3 randomPosition;
+        int maxAttempts = 100;
+        int attempts = 0;
+        while (attempts < maxAttempts)
+        {
+            randomPosition = new Vector3(
+                Random.Range(-4f, 4f),
+                Random.Range(2f, 4f),
+                Random.Range(-2f, 7f)
+            );
+            Collider[] colliders = Physics.OverlapBox(randomPosition, collisionSize / 2);
+
+            if (colliders.Length == 0) return randomPosition;
+            attempts++;
+        }
+        return Vector3.zero;
+    }
+    private void SpawnPositonTilesPrefabLevel1(GameObject tile, ref float x, ref float z)
+    {
+        tile.transform.localPosition = new Vector3(x, 2f, z);
+        if (x > 2f)
+        {
+            z -= 3f;
+            x = -3f;
+        }
+        else x += 3f;
+    }
 }
+
 
 [System.Serializable]
 public class LevelData

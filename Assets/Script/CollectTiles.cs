@@ -61,6 +61,7 @@ public class CollectTiles : MonoBehaviour
                     BackTileFromBox(i + 1, box.Length);
                     box[i + 1] = currentHoveredTile;
                     currentHoveredTile.transform.position = boxTransforms[i + 1].position;
+                    currentHoveredTile.transform.rotation = Quaternion.identity;
                     CheckLose();
                     StartCoroutine(DontTouch());
                     break;
@@ -70,6 +71,7 @@ public class CollectTiles : MonoBehaviour
                     BackTileFromBox(i + 2, box.Length);
                     box[i + 2] = currentHoveredTile;
                     currentHoveredTile.transform.position = boxTransforms[i + 2].position;
+                    currentHoveredTile.transform.rotation = Quaternion.identity;
                     StartCoroutine(CollectTileFromBox(i, i + 2));
                     if (box[i + 3] != null)StartCoroutine(ForwardTileFromBox(i + 3, box.Length));
                     StartCoroutine(DontTouch());
@@ -79,6 +81,7 @@ public class CollectTiles : MonoBehaviour
                 {
                     box[i] = currentHoveredTile;
                     currentHoveredTile.transform.position = boxTransforms[i].position;
+                    currentHoveredTile.transform.rotation = Quaternion.identity;
                     if (i >= 2)
                     {
                         if (box[i - 2].name == currentHoveredTile.name)
