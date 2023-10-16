@@ -76,7 +76,7 @@ public class SpawnTiles : MonoBehaviour
         for (int i = 1; i <= levelDataList.Level * 9; i++)
         {
             Vector3 spawnPosition = FindValidSpawnPosition(new Vector3(size, size, size));
-            GameObject newTile = Instantiate(tilePrefab, spawnPosition, Quaternion.Euler(0, Random.Range(0, 360), 0));
+            GameObject newTile = Instantiate(tilePrefab, spawnPosition, Quaternion.Euler(0, Random.Range(0, 360), 0), transform);
             newTile.name = nameTexture;
             tileList.Add(newTile);
             newTile.GetComponent<Renderer>().material.mainTexture = Resources.Load<Texture>("tiles/" + nameTexture);
@@ -95,7 +95,7 @@ public class SpawnTiles : MonoBehaviour
             randomPosition = new Vector3(
                 Random.Range(-4f, 4f),
                 Random.Range(1f, 3f),
-                Random.Range(-2f, 8f)
+                Random.Range(-2.5f, 7f)
             );
             Collider[] colliders = Physics.OverlapBox(randomPosition, collisionSize / 2);
 
