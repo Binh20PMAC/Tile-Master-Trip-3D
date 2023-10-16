@@ -1,31 +1,40 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
 public class SpawnTiles : MonoBehaviour
 {
     [SerializeField] private GameObject tilePrefab;
-    [SerializeField] public List<GameObject> tileList;
+    [SerializeField] private List<GameObject> tileList;
     [SerializeField] private TextAsset levelDataJSON;
-    [SerializeField] public LevelData levelDataList;
+    [SerializeField] private LevelData levelDataList;
     private List<string> colorOptions = new List<string>();
     private string[] curentColorOptions = new string[] { "TextureBlue", "TexturePink", "TexturePurple", "TextureRed", "TextureWhite", "TextureYellow" };
-    public string filePath;
-    void Start()
+    private void Start()
     {
-        LoadLevelData();
+        LoadLevelDataList();
         SpawnTilesPrefab();
     }
-
-    private void LoadLevelData()
+    public List<GameObject> GetTileList()
     {
-        filePath = AssetDatabase.GetAssetPath(levelDataJSON);
-        levelDataList = JsonUtility.FromJson<LevelData>(levelDataJSON.text);
+        return tileList;
     }
-    public string GetRandomLevelTexture(List<string> textureList)
+    public LevelData LoadLevelDataList()
+    {
+        return levelDataList = JsonUtility.FromJson<LevelData>(levelDataJSON.text);
+    }
+    public LevelData GetLevelDataList()
+    {
+        return levelDataList;
+    }
+
+    public string GetFilePath()
+    {
+        return AssetDatabase.GetAssetPath(levelDataJSON);
+    }
+
+    private string GetRandomLevelTexture(List<string> textureList)
     {
         if (textureList == null || textureList.Count == 0)
         {
@@ -35,7 +44,7 @@ public class SpawnTiles : MonoBehaviour
         int randomIndex = Random.Range(0, levelDataList.Level);
         return textureList[randomIndex];
     }
-    public string GetRandomColorTexture()
+    private string GetRandomColorTexture()
     {
         if (colorOptions.Count == 0)
         {
@@ -122,6 +131,7 @@ public class SpawnTiles : MonoBehaviour
 public class LevelData
 {
     public int Level;
+    public int Star;
     public List<string> TextureBlue;
     public List<string> TexturePink;
     public List<string> TexturePurple;

@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,6 +10,7 @@ public class CollectTiles : MonoBehaviour
     [SerializeField] private GameObject[] box;
     [SerializeField] private bool checkWin = false;
     [SerializeField] SpawnTiles spawnTiles;
+    [SerializeField] UIManager uiManager;
     private Vector3 originalScale;
 
     private void Start()
@@ -106,6 +105,11 @@ public class CollectTiles : MonoBehaviour
             box[i].SetActive(false);
             box[i] = null;
         }
+
+        uiManager.SetStar(++spawnTiles.GetLevelDataList().Star);
+        string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());
+        File.WriteAllText(spawnTiles.GetFilePath(), updatedJson);
+        AssetDatabase.Refresh();
         CheckWin();
     }
     private IEnumerator ForwardTileFromBox(int start, int end)
@@ -157,7 +161,7 @@ public class CollectTiles : MonoBehaviour
     }
     private void CheckWin()
     {
-        foreach (var tile in spawnTiles.tileList)
+        foreach (var tile in spawnTiles.GetTileList())
         {
             if (tile.activeInHierarchy)
             {
@@ -168,9 +172,10 @@ public class CollectTiles : MonoBehaviour
         }
         if (checkWin)
         {
-            ++spawnTiles.levelDataList.Level;
-            string updatedJson = JsonUtility.ToJson(spawnTiles.levelDataList);
-            File.WriteAllText(Application.dataPath + "/Resources/LevelData.json", updatedJson);
+            ++spawnTiles.GetLevelDataList().Level;
+            uiManager.SetStar(++spawnTiles.GetLevelDataList().Level);
+            string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());
+            File.WriteAllText(spawnTiles.GetFilePath(), updatedJson);
             AssetDatabase.Refresh();
         }
     }
