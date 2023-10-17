@@ -181,7 +181,7 @@ public class CollectTiles : MonoBehaviour
         }
         if (checkWin)
         {
-
+            uiManager.SetActiveWin(true, star);
             spawnTiles.GetLevelDataList().Star += star;
             ++spawnTiles.GetLevelDataList().Level;
             string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());

@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private SpawnTiles spawnTiles;
     [SerializeField] private GameObject gameScenePrefab;
     [SerializeField] private TMP_Text txtStar;
+    [SerializeField] private TMP_Text txtStarWin;
     [SerializeField] private TMP_Text txtClock;
     [SerializeField] private TMP_Text txtLevel;
     [SerializeField] private TMP_Text txtHomeLevel;
@@ -17,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text txtLevelLose;
     [SerializeField] private GameObject backgroundPause;
     [SerializeField] private GameObject backgroundLose;
+    [SerializeField] private GameObject backgroundWin;
     [SerializeField] private GameObject backgroundSeting;
     [SerializeField] private GameObject backgroundGamePlay;
     [SerializeField] private GameObject backgroundGameHome;
@@ -27,7 +29,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image backgroundMusicButton;
     [SerializeField] private Image backgroundSetingSoundButton;
     [SerializeField] private Image backgroundSetingMusicButton;
-    private float countdownTime = 120f;
+    [SerializeField] private float countdownTime = 600f;
     private bool isPaused = false;
     private void Awake()
     {
@@ -57,11 +59,7 @@ public class UIManager : MonoBehaviour
         if (countdownTime < 0)
         {
             countdownTime = 0;
-            if (!backgroundLose.activeInHierarchy)
-            {
-                SetActiveLose(true);
-                countdownTime = 60f;
-            }
+            SetActiveLose(true);
         }
         int minutes = Mathf.FloorToInt(countdownTime / 60);
         int seconds = Mathf.FloorToInt(countdownTime % 60);
@@ -70,6 +68,13 @@ public class UIManager : MonoBehaviour
     public void SetStar(int star)
     {
         txtStar.text = $"{star}";
+    }
+
+    public void SetActiveWin(bool active, int star)
+    {
+        backgroundWin.SetActive(active);
+        txtStarWin.text = $"+{star}";
+        Time.timeScale = 0;
     }
     private void SpawnGameScene(bool active)
     {
@@ -80,25 +85,14 @@ public class UIManager : MonoBehaviour
         gameScene = newGameScene;
         newGameScene.SetActive(active);
     }
-    private void DestroyGameScene()
-    {
-        Destroy(gameScene);
-    }
     public void SetActiveLose(bool active)
     {
-        backgroundLose.SetActive (active);
+        backgroundLose.SetActive(active);
         isPaused = active;
         txtLevelLose.text = $"LEVEL {spawnTiles.GetLevelDataList().Level}";
+        countdownTime = 0;
     }
-    public void TryAgain()
-    {
-        countdownTime = 120f;
-        isPaused = false;
-        SetActiveLose(false);
-        Time.timeScale = 1f;
-        DestroyGameScene();
-        SpawnGameScene(true);
-    }
+
     public bool GetPause()
     {
         return isPaused;
@@ -107,6 +101,8 @@ public class UIManager : MonoBehaviour
     {
         isPaused = true;
         backgroundPause.SetActive(true);
+        backgroundWin.SetActive(false);
+        backgroundLose.SetActive(false);
         Time.timeScale = 0;
     }
     public void Continute()
@@ -114,6 +110,7 @@ public class UIManager : MonoBehaviour
         isPaused = false;
         backgroundPause.SetActive(false);
         Time.timeScale = 1f;
+        if ($"LV.{spawnTiles.GetLevelDataList().Level}" != txtLevel.text) PlayGame();
     }
     public void OpenSeting()
     {
@@ -124,10 +121,17 @@ public class UIManager : MonoBehaviour
         backgroundSeting.SetActive(false);
     }
     public void PlayGame()
-    {     
+    {
+        txtStar.text = "0";
+        txtLevel.text = $"LV.{spawnTiles.GetLevelDataList().Level}";
+        countdownTime = 540f + (spawnTiles.GetLevelDataList().Level * 60);
+        isPaused = false;
         Time.timeScale = 1f;
-        backgroundGameHome.SetActive(false);
         backgroundGamePlay.SetActive(true);
+        backgroundGameHome.SetActive(false);
+        backgroundWin.SetActive(false);
+        backgroundLose.SetActive(false);
+        backgroundSeting.SetActive(false);
         SpawnGameScene(true);
     }
     public void GoHome()
@@ -139,7 +143,7 @@ public class UIManager : MonoBehaviour
         backgroundPause.SetActive(false);
         backgroundLose.SetActive(false);
         Start();
-        DestroyGameScene();
+        Destroy(gameScene);
     }
     public void Sound()
     {

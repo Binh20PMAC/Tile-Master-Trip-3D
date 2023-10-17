@@ -365,7 +365,7 @@ TextureImporter:
         width: 70
         height: 69
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -373,6 +373,27 @@ TextureImporter:
       bones: []
       spriteID: 478aefe0ba1cf454bb3d96a9073403fd
       internalID: 2033748648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sactx-0-2048x2048-ETC2-Common-ddf46b57_13
+      rect:
+        serializedVersion: 2
+        x: 1033
+        y: 0
+        width: 880
+        height: 432
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 261ab702142a99e4395ec3c0e24fa17f
+      internalID: -1279509166
       vertices: []
       indices: 
       edges: []
@@ -394,6 +415,7 @@ TextureImporter:
       sactx-0-2048x2048-ETC2-Common-ddf46b57_4: -1283924664
       sactx-0-2048x2048-ETC2-Common-ddf46b57_9: -227193585
       sactx-0-2048x2048-ETC2-Common-ddf46b57_3: 1233364565
+      sactx-0-2048x2048-ETC2-Common-ddf46b57_13: -1279509166
       sactx-0-2048x2048-ETC2-Common-ddf46b57_2: 1253774493
       sactx-0-2048x2048-ETC2-Common-ddf46b57_5: 32886792
       sactx-0-2048x2048-ETC2-Common-ddf46b57_6: 650280492
