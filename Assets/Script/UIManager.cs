@@ -40,7 +40,7 @@ public class UIManager : MonoBehaviour
         txtHomeCoin.text = $"{spawnTiles.GetLevelDataList().Coin}";
         txtHomeLevel.text = $"{spawnTiles.GetLevelDataList().Level}";
         txtLevel.text = $"Lv.{spawnTiles.GetLevelDataList().Level}";
-        txtStar.text = $"{spawnTiles.GetLevelDataList().Star}";
+        txtStar.text = "0";
         backgroundSoundButton.sprite = backgroundSound[spawnTiles.GetLevelDataList().Sound ? 1 : 0];
         backgroundMusicButton.sprite = backgroundMusic[spawnTiles.GetLevelDataList().Music ? 1 : 0];
         backgroundSetingSoundButton.sprite = backgroundSound[spawnTiles.GetLevelDataList().Sound ? 1 : 0];

@@ -11,6 +11,7 @@ public class CollectTiles : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     private Vector3 originalScale;
     private bool canClick = true;
+    private int star = 0;
     private void Start()
     {
         uiManager = GameObject.Find("UICode").GetComponent<UIManager>();
@@ -117,10 +118,7 @@ public class CollectTiles : MonoBehaviour
             box[i].SetActive(false);
             box[i] = null;
         }
-
-        uiManager.SetStar(++spawnTiles.GetLevelDataList().Star);
-        string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());
-        spawnTiles.SetLevelDataJson(updatedJson);
+        uiManager.SetStar(++star);
         CheckWin();
     }
     private IEnumerator ForwardTileFromBox(int start, int end)
@@ -183,6 +181,8 @@ public class CollectTiles : MonoBehaviour
         }
         if (checkWin)
         {
+
+            spawnTiles.GetLevelDataList().Star += star;
             ++spawnTiles.GetLevelDataList().Level;
             string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());
             spawnTiles.SetLevelDataJson(updatedJson);
