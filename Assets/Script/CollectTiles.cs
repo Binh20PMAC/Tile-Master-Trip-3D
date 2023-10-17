@@ -9,11 +9,13 @@ public class CollectTiles : MonoBehaviour
     [SerializeField] private bool _checkWin = false;
     [SerializeField] private SpawnTiles _spawnTiles;
     [SerializeField] private UIManager _uiManager;
+    [SerializeField] private AudioManager _audioManager;
     private Vector3 _originalScale;
     private bool _canClick = true;
     private int _star = 0;
     private void Start()
     {
+        _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         _uiManager = GameObject.Find("UICode").GetComponent<UIManager>();
         _box = new GameObject[_boxTransforms.Length + 2];
     }
@@ -47,6 +49,7 @@ public class CollectTiles : MonoBehaviour
                 _originalScale = hit.collider.gameObject.transform.localScale;
                 _currentHoveredTile = hit.collider.gameObject;
                 _currentHoveredTile.transform.localScale += new Vector3(0.2f, 0.2f, 0.2f);
+                _audioManager.PlaySFX("Pick");
             }
             else if (hit.collider.gameObject != _currentHoveredTile && _currentHoveredTile != null)
             {
@@ -59,6 +62,7 @@ public class CollectTiles : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0) && _currentHoveredTile != null && _canClick)
         {
+            _audioManager.PlaySFX("Click");
             _canClick = false;
             Invoke("EnableClick", 0.2f);
             for (int i = 0; i < _box.Length; i++)
@@ -119,6 +123,7 @@ public class CollectTiles : MonoBehaviour
             _box[i] = null;
         }
         _uiManager.SetStar(++_star);
+        _audioManager.PlaySFX("Collect");
         CheckWin();
     }
     private IEnumerator ForwardTileFromBox(int start, int end)
@@ -186,6 +191,7 @@ public class CollectTiles : MonoBehaviour
             ++_spawnTiles.GetLevelDataList().Level;
             string updatedJson = JsonUtility.ToJson(_spawnTiles.GetLevelDataList());
             _spawnTiles.SetLevelDataJson(updatedJson);
+            _audioManager.PlaySFX("Victory");
         }
     }
 
@@ -197,6 +203,7 @@ public class CollectTiles : MonoBehaviour
         {
             _uiManager.SetActiveLose(true);
             _currentHoveredTile = null;
+            _audioManager.PlaySFX("Lose");
         }
     }
 }

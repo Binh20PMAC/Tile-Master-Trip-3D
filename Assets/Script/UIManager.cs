@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private SpawnTiles _spawnTiles;
+    [SerializeField] private AudioManager _audioManager;
     [SerializeField] private GameObject _gameScenePrefab;
     [SerializeField] private TMP_Text _txtStar;
     [SerializeField] private TMP_Text _txtStarWin;
@@ -91,6 +92,7 @@ public class UIManager : MonoBehaviour
         _isPaused = active;
         _txtLevelLose.text = $"LEVEL {_spawnTiles.GetLevelDataList().Level}";
         _countdownTime = 0;
+        _audioManager.PlaySFX("Lose");
     }
 
     public bool GetPause()
@@ -104,6 +106,7 @@ public class UIManager : MonoBehaviour
         _backgroundWin.SetActive(false);
         _backgroundLose.SetActive(false);
         Time.timeScale = 0;
+        _audioManager.PlaySFX("Button");
     }
     public void Continute()
     {
@@ -111,14 +114,17 @@ public class UIManager : MonoBehaviour
         _backgroundPause.SetActive(false);
         Time.timeScale = 1f;
         if ($"LV.{_spawnTiles.GetLevelDataList().Level}" != _txtLevel.text) PlayGame();
+        _audioManager.PlaySFX("Button");
     }
     public void OpenSeting()
     {
         _backgroundSeting.SetActive(true);
+        _audioManager.PlaySFX("Button");
     }
     public void CloseSeting()
     {
         _backgroundSeting.SetActive(false);
+        _audioManager.PlaySFX("Button");
     }
     public void PlayGame()
     {
@@ -133,6 +139,7 @@ public class UIManager : MonoBehaviour
         _backgroundLose.SetActive(false);
         _backgroundSeting.SetActive(false);
         SpawnGameScene(true);
+        _audioManager.PlaySFX("Button");
     }
     public void GoHome()
     {
@@ -144,6 +151,7 @@ public class UIManager : MonoBehaviour
         _backgroundLose.SetActive(false);
         Start();
         Destroy(_gameScene);
+        _audioManager.PlaySFX("Button");
     }
     public void Sound()
     {
@@ -152,6 +160,7 @@ public class UIManager : MonoBehaviour
         _backgroundSetingSoundButton.sprite = _backgroundSound[_spawnTiles.GetLevelDataList().Sound ? 1 : 0];
         string updatedJson = JsonUtility.ToJson(_spawnTiles.GetLevelDataList());
         _spawnTiles.SetLevelDataJson(updatedJson);
+        _audioManager.PlaySFX("Button");
     }
 
     public void Music()
@@ -161,5 +170,6 @@ public class UIManager : MonoBehaviour
         _backgroundSetingMusicButton.sprite = _backgroundMusic[_spawnTiles.GetLevelDataList().Music ? 1 : 0];
         string updatedJson = JsonUtility.ToJson(_spawnTiles.GetLevelDataList());
         _spawnTiles.SetLevelDataJson(updatedJson);
+        _audioManager.PlaySFX("Button");
     }
 }
