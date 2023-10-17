@@ -2857,37 +2857,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 705358441}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6d5a1535fddbd04ca7923eb85f50c82, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f355b90f5522f849861d5bc61f38e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnTiles: {fileID: 0}
-  gameScenePrefab: {fileID: 9110935859114264965, guid: 3ae2c1fef5300e64883f6f5b9fa8d315, type: 3}
-  txtStar: {fileID: 193749723}
-  txtStarWin: {fileID: 1471239166}
-  txtClock: {fileID: 346887501}
-  txtLevel: {fileID: 178475094}
-  txtHomeLevel: {fileID: 1597242264}
-  txtHomeCoin: {fileID: 506076511}
-  txtHomeStar: {fileID: 837830515}
-  txtLevelLose: {fileID: 1669492282}
-  backgroundPause: {fileID: 1432049692}
-  backgroundLose: {fileID: 1676437734}
-  backgroundWin: {fileID: 262705267}
-  backgroundSeting: {fileID: 401854305}
-  backgroundGamePlay: {fileID: 103234810}
-  backgroundGameHome: {fileID: 1450402583}
-  gameScene: {fileID: 0}
-  backgroundSound:
+  _spawnTiles: {fileID: 0}
+  _gameScenePrefab: {fileID: 9110935859114264965, guid: 3ae2c1fef5300e64883f6f5b9fa8d315, type: 3}
+  _txtStar: {fileID: 193749723}
+  _txtStarWin: {fileID: 1471239166}
+  _txtClock: {fileID: 346887501}
+  _txtLevel: {fileID: 178475094}
+  _txtHomeLevel: {fileID: 1597242264}
+  _txtHomeCoin: {fileID: 506076511}
+  _txtHomeStar: {fileID: 837830515}
+  _txtLevelLose: {fileID: 1669492282}
+  _backgroundPause: {fileID: 1432049692}
+  _backgroundLose: {fileID: 1676437734}
+  _backgroundWin: {fileID: 262705267}
+  _backgroundSeting: {fileID: 401854305}
+  _backgroundGamePlay: {fileID: 103234810}
+  _backgroundGameHome: {fileID: 1450402583}
+  _gameScene: {fileID: 0}
+  _backgroundSound:
   - {fileID: 21300000, guid: 3bbf2f802ef04de41b3c493d173d9a32, type: 2}
   - {fileID: 21300000, guid: 14ad52425a679a349b28eeec13b5db1c, type: 2}
-  backgroundMusic:
+  _backgroundMusic:
   - {fileID: 21300000, guid: 22a5bc585498eb946ab288b631b82a73, type: 2}
   - {fileID: 21300000, guid: 641eda792ef3d684aadd120c551edfba, type: 2}
-  backgroundSoundButton: {fileID: 184980843}
-  backgroundMusicButton: {fileID: 1243824910}
-  backgroundSetingSoundButton: {fileID: 1953069178}
-  backgroundSetingMusicButton: {fileID: 403196015}
-  countdownTime: 600
+  _backgroundSoundButton: {fileID: 184980843}
+  _backgroundMusicButton: {fileID: 1243824910}
+  _backgroundSetingSoundButton: {fileID: 1953069178}
+  _backgroundSetingMusicButton: {fileID: 403196015}
+  _countdownTime: 600
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -3476,7 +3476,7 @@ GameObject:
   - component: {fileID: 837830516}
   - component: {fileID: 837830515}
   m_Layer: 5
-  m_Name: textstart
+  m_Name: textstar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

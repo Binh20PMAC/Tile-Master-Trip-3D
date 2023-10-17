@@ -6,13 +6,13 @@ using UnityEngine;
 
 public class SpawnTiles : MonoBehaviour
 {
-    [SerializeField] private CollectTiles collectTiles;
-    [SerializeField] private GameObject tilePrefab;
-    [SerializeField] private List<GameObject> tileList;
-    [SerializeField] private TextAsset levelDataJSON;
-    [SerializeField] private LevelData levelDataList;
-    private List<string> colorOptions = new List<string>();
-    private string[] curentColorOptions = new string[] { "TextureBlue", "TexturePink", "TexturePurple", "TextureRed", "TextureWhite", "TextureYellow" };
+    [SerializeField] private CollectTiles _collectTiles;
+    [SerializeField] private GameObject _tilePrefab;
+    [SerializeField] private List<GameObject> _tileList;
+    [SerializeField] private TextAsset _levelDataJSON;
+    [SerializeField] private LevelData _levelDataList;
+    private List<string> _colorOptions = new List<string>();
+    private string[] _curentColorOptions = new string[] { "TextureBlue", "TexturePink", "TexturePurple", "TextureRed", "TextureWhite", "TextureYellow" };
     private void Start()
     {
         SetLevelDataList();
@@ -20,19 +20,19 @@ public class SpawnTiles : MonoBehaviour
     }
     public List<GameObject> GetTileList()
     {
-        return tileList;
+        return _tileList;
     }
     public LevelData SetLevelDataList()
     {
-        return levelDataList = JsonUtility.FromJson<LevelData>(levelDataJSON.text);
+        return _levelDataList = JsonUtility.FromJson<LevelData>(_levelDataJSON.text);
     }
     public LevelData GetLevelDataList()
     {
-        return levelDataList;
+        return _levelDataList;
     }
     public void SetLevelDataJson(string updatedJson)
     {
-        File.WriteAllText(AssetDatabase.GetAssetPath(levelDataJSON), updatedJson);
+        File.WriteAllText(AssetDatabase.GetAssetPath(_levelDataJSON), updatedJson);
         AssetDatabase.Refresh();
     }
 
@@ -43,37 +43,37 @@ public class SpawnTiles : MonoBehaviour
             return null;
         }
 
-        int randomIndex = Random.Range(0, levelDataList.Level);
+        int randomIndex = Random.Range(0, _levelDataList.Level);
         return textureList[randomIndex];
     }
     private string GetRandomColorTexture()
     {
-        if (colorOptions.Count == 0)
+        if (_colorOptions.Count == 0)
         {
-            colorOptions = curentColorOptions.ToList();
+            _colorOptions = _curentColorOptions.ToList();
             GetRandomColorTexture();
         }
-        string randomColor = colorOptions[Random.Range(0, colorOptions.Count)];
+        string randomColor = _colorOptions[Random.Range(0, _colorOptions.Count)];
         switch (randomColor)
         {
             case "TextureBlue":
-                colorOptions.Remove(randomColor);
-                return GetRandomLevelTexture(levelDataList.TextureBlue);
+                _colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(_levelDataList.TextureBlue);
             case "TexturePink":
-                colorOptions.Remove(randomColor);
-                return GetRandomLevelTexture(levelDataList.TexturePink);
+                _colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(_levelDataList.TexturePink);
             case "TexturePurple":
-                colorOptions.Remove(randomColor);
-                return GetRandomLevelTexture(levelDataList.TexturePurple);
+                _colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(_levelDataList.TexturePurple);
             case "TextureRed":
-                colorOptions.Remove(randomColor);
-                return GetRandomLevelTexture(levelDataList.TextureRed);
+                _colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(_levelDataList.TextureRed);
             case "TextureWhite":
-                colorOptions.Remove(randomColor);
-                return GetRandomLevelTexture(levelDataList.TextureWhite);
+                _colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(_levelDataList.TextureWhite);
             case "TextureYellow":
-                colorOptions.Remove(randomColor);
-                return GetRandomLevelTexture(levelDataList.TextureYellow);
+                _colorOptions.Remove(randomColor);
+                return GetRandomLevelTexture(_levelDataList.TextureYellow);
             default:
                 return GetRandomColorTexture();
         }
@@ -82,17 +82,17 @@ public class SpawnTiles : MonoBehaviour
     {
         float x = -3f;
         float z = 5f;
-        float size = tilePrefab.transform.position.x + 1f;
+        float size = _tilePrefab.transform.position.x + 1f;
         string nameTexture = GetRandomColorTexture();
-        for (int i = 1; i <= levelDataList.Level * 9; i++)
+        for (int i = 1; i <= _levelDataList.Level * 9; i++)
         {
             Vector3 spawnPosition = FindValidSpawnPosition(new Vector3(size, size, size));
-            GameObject newTile = Instantiate(tilePrefab, spawnPosition, Quaternion.Euler(0, Random.Range(0, 360), 0), transform);
+            GameObject newTile = Instantiate(_tilePrefab, spawnPosition, Quaternion.Euler(0, Random.Range(0, 360), 0), transform);
             newTile.name = nameTexture;
-            tileList.Add(newTile);
+            _tileList.Add(newTile);
             newTile.GetComponent<Renderer>().material.mainTexture = Resources.Load<Texture>("tiles/" + nameTexture);
             if (i % 3 == 0) nameTexture = GetRandomColorTexture();
-            if (levelDataList.Level != 1) continue;
+            if (_levelDataList.Level != 1) continue;
             SpawnPositonTilesPrefabLevel1(newTile, ref x, ref z);
         }
     }

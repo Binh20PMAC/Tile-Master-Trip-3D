@@ -6,47 +6,47 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private SpawnTiles spawnTiles;
-    [SerializeField] private GameObject gameScenePrefab;
-    [SerializeField] private TMP_Text txtStar;
-    [SerializeField] private TMP_Text txtStarWin;
-    [SerializeField] private TMP_Text txtClock;
-    [SerializeField] private TMP_Text txtLevel;
-    [SerializeField] private TMP_Text txtHomeLevel;
-    [SerializeField] private TMP_Text txtHomeCoin;
-    [SerializeField] private TMP_Text txtHomeStar;
-    [SerializeField] private TMP_Text txtLevelLose;
-    [SerializeField] private GameObject backgroundPause;
-    [SerializeField] private GameObject backgroundLose;
-    [SerializeField] private GameObject backgroundWin;
-    [SerializeField] private GameObject backgroundSeting;
-    [SerializeField] private GameObject backgroundGamePlay;
-    [SerializeField] private GameObject backgroundGameHome;
-    [SerializeField] private GameObject gameScene;
-    [SerializeField] private Sprite[] backgroundSound;
-    [SerializeField] private Sprite[] backgroundMusic;
-    [SerializeField] private Image backgroundSoundButton;
-    [SerializeField] private Image backgroundMusicButton;
-    [SerializeField] private Image backgroundSetingSoundButton;
-    [SerializeField] private Image backgroundSetingMusicButton;
-    [SerializeField] private float countdownTime = 600f;
-    private bool isPaused = false;
+    [SerializeField] private SpawnTiles _spawnTiles;
+    [SerializeField] private GameObject _gameScenePrefab;
+    [SerializeField] private TMP_Text _txtStar;
+    [SerializeField] private TMP_Text _txtStarWin;
+    [SerializeField] private TMP_Text _txtClock;
+    [SerializeField] private TMP_Text _txtLevel;
+    [SerializeField] private TMP_Text _txtHomeLevel;
+    [SerializeField] private TMP_Text _txtHomeCoin;
+    [SerializeField] private TMP_Text _txtHomeStar;
+    [SerializeField] private TMP_Text _txtLevelLose;
+    [SerializeField] private GameObject _backgroundPause;
+    [SerializeField] private GameObject _backgroundLose;
+    [SerializeField] private GameObject _backgroundWin;
+    [SerializeField] private GameObject _backgroundSeting;
+    [SerializeField] private GameObject _backgroundGamePlay;
+    [SerializeField] private GameObject _backgroundGameHome;
+    [SerializeField] private GameObject _gameScene;
+    [SerializeField] private Sprite[] _backgroundSound;
+    [SerializeField] private Sprite[] _backgroundMusic;
+    [SerializeField] private Image _backgroundSoundButton;
+    [SerializeField] private Image _backgroundMusicButton;
+    [SerializeField] private Image _backgroundSetingSoundButton;
+    [SerializeField] private Image _backgroundSetingMusicButton;
+    [SerializeField] private float _countdownTime = 600f;
+    private bool _isPaused = false;
     private void Awake()
     {
         SpawnGameScene(false);
-        spawnTiles.SetLevelDataList();
+        _spawnTiles.SetLevelDataList();
     }
     private void Start()
     {
-        txtHomeStar.text = $"{spawnTiles.GetLevelDataList().Star}";
-        txtHomeCoin.text = $"{spawnTiles.GetLevelDataList().Coin}";
-        txtHomeLevel.text = $"{spawnTiles.GetLevelDataList().Level}";
-        txtLevel.text = $"Lv.{spawnTiles.GetLevelDataList().Level}";
-        txtStar.text = "0";
-        backgroundSoundButton.sprite = backgroundSound[spawnTiles.GetLevelDataList().Sound ? 1 : 0];
-        backgroundMusicButton.sprite = backgroundMusic[spawnTiles.GetLevelDataList().Music ? 1 : 0];
-        backgroundSetingSoundButton.sprite = backgroundSound[spawnTiles.GetLevelDataList().Sound ? 1 : 0];
-        backgroundSetingMusicButton.sprite = backgroundMusic[spawnTiles.GetLevelDataList().Music ? 1 : 0];
+        _txtHomeStar.text = $"{_spawnTiles.GetLevelDataList().Star}";
+        _txtHomeCoin.text = $"{_spawnTiles.GetLevelDataList().Coin}";
+        _txtHomeLevel.text = $"{_spawnTiles.GetLevelDataList().Level}";
+        _txtLevel.text = $"Lv.{_spawnTiles.GetLevelDataList().Level}";
+        _txtStar.text = "0";
+        _backgroundSoundButton.sprite = _backgroundSound[_spawnTiles.GetLevelDataList().Sound ? 1 : 0];
+        _backgroundMusicButton.sprite = _backgroundMusic[_spawnTiles.GetLevelDataList().Music ? 1 : 0];
+        _backgroundSetingSoundButton.sprite = _backgroundSound[_spawnTiles.GetLevelDataList().Sound ? 1 : 0];
+        _backgroundSetingMusicButton.sprite = _backgroundMusic[_spawnTiles.GetLevelDataList().Music ? 1 : 0];
     }
     private void Update()
     {
@@ -54,112 +54,112 @@ public class UIManager : MonoBehaviour
     }
     private void UpdateTimerUI()
     {
-        if (backgroundLose.activeInHierarchy) return;
-        countdownTime -= Time.deltaTime;
-        if (countdownTime < 0)
+        if (_backgroundLose.activeInHierarchy) return;
+        _countdownTime -= Time.deltaTime;
+        if (_countdownTime < 0)
         {
-            countdownTime = 0;
+            _countdownTime = 0;
             SetActiveLose(true);
         }
-        int minutes = Mathf.FloorToInt(countdownTime / 60);
-        int seconds = Mathf.FloorToInt(countdownTime % 60);
-        txtClock.text = string.Format("{0:00}:{1:00}", minutes, seconds); ;
+        int minutes = Mathf.FloorToInt(_countdownTime / 60);
+        int seconds = Mathf.FloorToInt(_countdownTime % 60);
+        _txtClock.text = string.Format("{0:00}:{1:00}", minutes, seconds); ;
     }
     public void SetStar(int star)
     {
-        txtStar.text = $"{star}";
+        _txtStar.text = $"{star}";
     }
 
     public void SetActiveWin(bool active, int star)
     {
-        backgroundWin.SetActive(active);
-        txtStarWin.text = $"+{star}";
+        _backgroundWin.SetActive(active);
+        _txtStarWin.text = $"+{star}";
         Time.timeScale = 0;
     }
     private void SpawnGameScene(bool active)
     {
-        if (gameScene != null) Destroy(gameScene);
-        GameObject newGameScene = Instantiate(gameScenePrefab);
-        newGameScene.name = gameScenePrefab.name;
-        spawnTiles = newGameScene.GetComponentInChildren<SpawnTiles>();
-        gameScene = newGameScene;
+        if (_gameScene != null) Destroy(_gameScene);
+        GameObject newGameScene = Instantiate(_gameScenePrefab);
+        newGameScene.name = _gameScenePrefab.name;
+        _spawnTiles = newGameScene.GetComponentInChildren<SpawnTiles>();
+        _gameScene = newGameScene;
         newGameScene.SetActive(active);
     }
     public void SetActiveLose(bool active)
     {
-        backgroundLose.SetActive(active);
-        isPaused = active;
-        txtLevelLose.text = $"LEVEL {spawnTiles.GetLevelDataList().Level}";
-        countdownTime = 0;
+        _backgroundLose.SetActive(active);
+        _isPaused = active;
+        _txtLevelLose.text = $"LEVEL {_spawnTiles.GetLevelDataList().Level}";
+        _countdownTime = 0;
     }
 
     public bool GetPause()
     {
-        return isPaused;
+        return _isPaused;
     }
     public void Pause()
     {
-        isPaused = true;
-        backgroundPause.SetActive(true);
-        backgroundWin.SetActive(false);
-        backgroundLose.SetActive(false);
+        _isPaused = true;
+        _backgroundPause.SetActive(true);
+        _backgroundWin.SetActive(false);
+        _backgroundLose.SetActive(false);
         Time.timeScale = 0;
     }
     public void Continute()
     {
-        isPaused = false;
-        backgroundPause.SetActive(false);
+        _isPaused = false;
+        _backgroundPause.SetActive(false);
         Time.timeScale = 1f;
-        if ($"LV.{spawnTiles.GetLevelDataList().Level}" != txtLevel.text) PlayGame();
+        if ($"LV.{_spawnTiles.GetLevelDataList().Level}" != _txtLevel.text) PlayGame();
     }
     public void OpenSeting()
     {
-        backgroundSeting.SetActive(true);
+        _backgroundSeting.SetActive(true);
     }
     public void CloseSeting()
     {
-        backgroundSeting.SetActive(false);
+        _backgroundSeting.SetActive(false);
     }
     public void PlayGame()
     {
-        txtStar.text = "0";
-        txtLevel.text = $"LV.{spawnTiles.GetLevelDataList().Level}";
-        countdownTime = 540f + (spawnTiles.GetLevelDataList().Level * 60);
-        isPaused = false;
+        _txtStar.text = "0";
+        _txtLevel.text = $"LV.{_spawnTiles.GetLevelDataList().Level}";
+        _countdownTime = 540f + (_spawnTiles.GetLevelDataList().Level * 60);
+        _isPaused = false;
         Time.timeScale = 1f;
-        backgroundGamePlay.SetActive(true);
-        backgroundGameHome.SetActive(false);
-        backgroundWin.SetActive(false);
-        backgroundLose.SetActive(false);
-        backgroundSeting.SetActive(false);
+        _backgroundGamePlay.SetActive(true);
+        _backgroundGameHome.SetActive(false);
+        _backgroundWin.SetActive(false);
+        _backgroundLose.SetActive(false);
+        _backgroundSeting.SetActive(false);
         SpawnGameScene(true);
     }
     public void GoHome()
     {
-        countdownTime = 120f;
-        isPaused = false;
-        backgroundGameHome.SetActive(true);
-        backgroundGamePlay.SetActive(false);
-        backgroundPause.SetActive(false);
-        backgroundLose.SetActive(false);
+        _countdownTime = 120f;
+        _isPaused = false;
+        _backgroundGameHome.SetActive(true);
+        _backgroundGamePlay.SetActive(false);
+        _backgroundPause.SetActive(false);
+        _backgroundLose.SetActive(false);
         Start();
-        Destroy(gameScene);
+        Destroy(_gameScene);
     }
     public void Sound()
     {
-        spawnTiles.GetLevelDataList().Sound = !spawnTiles.GetLevelDataList().Sound;
-        backgroundSoundButton.sprite = backgroundSound[spawnTiles.GetLevelDataList().Sound ? 1 : 0];
-        backgroundSetingSoundButton.sprite = backgroundSound[spawnTiles.GetLevelDataList().Sound ? 1 : 0];
-        string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());
-        spawnTiles.SetLevelDataJson(updatedJson);
+        _spawnTiles.GetLevelDataList().Sound = !_spawnTiles.GetLevelDataList().Sound;
+        _backgroundSoundButton.sprite = _backgroundSound[_spawnTiles.GetLevelDataList().Sound ? 1 : 0];
+        _backgroundSetingSoundButton.sprite = _backgroundSound[_spawnTiles.GetLevelDataList().Sound ? 1 : 0];
+        string updatedJson = JsonUtility.ToJson(_spawnTiles.GetLevelDataList());
+        _spawnTiles.SetLevelDataJson(updatedJson);
     }
 
     public void Music()
     {
-        spawnTiles.GetLevelDataList().Music = !spawnTiles.GetLevelDataList().Music;
-        backgroundMusicButton.sprite = backgroundMusic[spawnTiles.GetLevelDataList().Music ? 1 : 0];
-        backgroundSetingMusicButton.sprite = backgroundMusic[spawnTiles.GetLevelDataList().Music ? 1 : 0];
-        string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());
-        spawnTiles.SetLevelDataJson(updatedJson);
+        _spawnTiles.GetLevelDataList().Music = !_spawnTiles.GetLevelDataList().Music;
+        _backgroundMusicButton.sprite = _backgroundMusic[_spawnTiles.GetLevelDataList().Music ? 1 : 0];
+        _backgroundSetingMusicButton.sprite = _backgroundMusic[_spawnTiles.GetLevelDataList().Music ? 1 : 0];
+        string updatedJson = JsonUtility.ToJson(_spawnTiles.GetLevelDataList());
+        _spawnTiles.SetLevelDataJson(updatedJson);
     }
 }

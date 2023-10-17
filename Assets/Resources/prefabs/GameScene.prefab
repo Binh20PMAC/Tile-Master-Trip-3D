@@ -352,11 +352,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45f7c4a91e4522b4b994b837e09edc9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectTiles: {fileID: 9110935858925072033}
-  tilePrefab: {fileID: 1712734058490115, guid: 776c9fa481a85294f800edd72e504f21, type: 3}
-  tileList: []
-  levelDataJSON: {fileID: 4900000, guid: 2091f071a393e1347acead1d1d288476, type: 3}
-  levelDataList:
+  _collectTiles: {fileID: 9110935858925072033}
+  _tilePrefab: {fileID: 1712734058490115, guid: 776c9fa481a85294f800edd72e504f21, type: 3}
+  _tileList: []
+  _levelDataJSON: {fileID: 4900000, guid: 2091f071a393e1347acead1d1d288476, type: 3}
+  _levelDataList:
     Level: 0
     Coin: 0
     Star: 0
@@ -476,8 +476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ecc9d18ee8a00e478ff6389c726a387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHoveredTile: {fileID: 0}
-  boxTransforms:
+  _currentHoveredTile: {fileID: 0}
+  _boxTransforms:
   - {fileID: 9110935858195611135}
   - {fileID: 9110935858155756224}
   - {fileID: 9110935859139497862}
@@ -486,10 +486,10 @@ MonoBehaviour:
   - {fileID: 9110935858546560809}
   - {fileID: 9110935858759778775}
   - {fileID: 9110935859545501858}
-  box: []
-  checkWin: 0
-  spawnTiles: {fileID: 9110935858513647694}
-  uiManager: {fileID: 0}
+  _box: []
+  _checkWin: 0
+  _spawnTiles: {fileID: 9110935858513647694}
+  _uiManager: {fileID: 0}
 --- !u!1 &9110935859114264965
 GameObject:
   m_ObjectHideFlags: 0
