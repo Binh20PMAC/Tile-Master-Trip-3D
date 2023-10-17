@@ -1,6 +1,9 @@
 {
   "Level": 1,
-  "Star": 0,
+  "Coin": 1000,
+  "Star": 4,
+  "Sound": false,
+  "Music": false,
   "TextureBlue": [
     "texture_blue1",
     "texture_blue2",

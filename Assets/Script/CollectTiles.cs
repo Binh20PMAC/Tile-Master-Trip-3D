@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 public class CollectTiles : MonoBehaviour
@@ -9,12 +7,13 @@ public class CollectTiles : MonoBehaviour
     [SerializeField] private Transform[] boxTransforms;
     [SerializeField] private GameObject[] box;
     [SerializeField] private bool checkWin = false;
-    [SerializeField] SpawnTiles spawnTiles;
-    [SerializeField] UIManager uiManager;
+    [SerializeField] private SpawnTiles spawnTiles;
+    [SerializeField] private UIManager uiManager;
     private Vector3 originalScale;
-
+    private bool canClick = true;
     private void Start()
     {
+        uiManager = GameObject.Find("UICode").GetComponent<UIManager>();
         box = new GameObject[boxTransforms.Length + 2];
     }
     private void Update()
@@ -22,8 +21,15 @@ public class CollectTiles : MonoBehaviour
         HoverScale();
         MoveToBoxAndCheckCollect();
     }
+
+    public void ClearBox()
+    {
+        currentHoveredTile = null;
+        box = new GameObject[boxTransforms.Length + 2];
+    }
     private void HoverScale()
     {
+        if (uiManager.GetPause()) return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
@@ -50,8 +56,10 @@ public class CollectTiles : MonoBehaviour
     }
     private void MoveToBoxAndCheckCollect()
     {
-        if (Input.GetMouseButtonUp(0) && currentHoveredTile != null)
+        if (Input.GetMouseButtonUp(0) && currentHoveredTile != null && canClick)
         {
+            canClick = false;
+            Invoke("EnableClick", 0.2f);
             for (int i = 0; i < box.Length; i++)
             {
                 if (box[i] != null && box[i].name != currentHoveredTile.name) continue;
@@ -72,7 +80,7 @@ public class CollectTiles : MonoBehaviour
                     currentHoveredTile.transform.position = boxTransforms[i + 2].position;
                     currentHoveredTile.transform.rotation = Quaternion.identity;
                     StartCoroutine(CollectTileFromBox(i, i + 2));
-                    if (box[i + 3] != null)StartCoroutine(ForwardTileFromBox(i + 3, box.Length));
+                    if (box[i + 3] != null) StartCoroutine(ForwardTileFromBox(i + 3, box.Length));
                     StartCoroutine(DontTouch());
                     break;
                 }
@@ -85,7 +93,7 @@ public class CollectTiles : MonoBehaviour
                     {
                         if (box[i - 2].name == currentHoveredTile.name)
                         {
-                           StartCoroutine(CollectTileFromBox(i - 2, i));
+                            StartCoroutine(CollectTileFromBox(i - 2, i));
                         }
                         else CheckLose();
                     }
@@ -97,26 +105,29 @@ public class CollectTiles : MonoBehaviour
         }
     }
 
+    private void EnableClick()
+    {
+        canClick = true;
+    }
     private IEnumerator CollectTileFromBox(int start, int end)
     {
         for (int i = start; i <= end; i++)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.06f);
             box[i].SetActive(false);
             box[i] = null;
         }
 
         uiManager.SetStar(++spawnTiles.GetLevelDataList().Star);
         string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());
-        File.WriteAllText(spawnTiles.GetFilePath(), updatedJson);
-        AssetDatabase.Refresh();
+        spawnTiles.SetLevelDataJson(updatedJson);
         CheckWin();
     }
     private IEnumerator ForwardTileFromBox(int start, int end)
     {
         for (int i = start; i < end; i++)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.06f);
             if (box[i] == null) continue;
             box[i - 3] = box[i];
             box[i - 3].transform.position = boxTransforms[i - 3].position;
@@ -145,7 +156,7 @@ public class CollectTiles : MonoBehaviour
                 if (tile.transform.localScale.x < 2f) yield break;
                 yield return null;
             }
-            
+
         }
     }
     private IEnumerator DontTouch()
@@ -174,8 +185,7 @@ public class CollectTiles : MonoBehaviour
         {
             ++spawnTiles.GetLevelDataList().Level;
             string updatedJson = JsonUtility.ToJson(spawnTiles.GetLevelDataList());
-            File.WriteAllText(spawnTiles.GetFilePath(), updatedJson);
-            AssetDatabase.Refresh();
+            spawnTiles.SetLevelDataJson(updatedJson);
         }
     }
 
@@ -183,6 +193,10 @@ public class CollectTiles : MonoBehaviour
     {
         int index = 0;
         foreach (var tile in box) if (tile != null) index++;
-        if (index >= 8) Debug.Log("You Lose");
+        if (index >= 7)
+        {
+            uiManager.SetActiveLose(true);
+            currentHoveredTile = null;
+        }
     }
 }

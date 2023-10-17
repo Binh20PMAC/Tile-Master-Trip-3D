@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
 public class SpawnTiles : MonoBehaviour
 {
+    [SerializeField] private CollectTiles collectTiles;
     [SerializeField] private GameObject tilePrefab;
     [SerializeField] private List<GameObject> tileList;
     [SerializeField] private TextAsset levelDataJSON;
@@ -13,14 +15,14 @@ public class SpawnTiles : MonoBehaviour
     private string[] curentColorOptions = new string[] { "TextureBlue", "TexturePink", "TexturePurple", "TextureRed", "TextureWhite", "TextureYellow" };
     private void Start()
     {
-        LoadLevelDataList();
+        SetLevelDataList();
         SpawnTilesPrefab();
     }
     public List<GameObject> GetTileList()
     {
         return tileList;
     }
-    public LevelData LoadLevelDataList()
+    public LevelData SetLevelDataList()
     {
         return levelDataList = JsonUtility.FromJson<LevelData>(levelDataJSON.text);
     }
@@ -28,10 +30,10 @@ public class SpawnTiles : MonoBehaviour
     {
         return levelDataList;
     }
-
-    public string GetFilePath()
+    public void SetLevelDataJson(string updatedJson)
     {
-        return AssetDatabase.GetAssetPath(levelDataJSON);
+        File.WriteAllText(AssetDatabase.GetAssetPath(levelDataJSON), updatedJson);
+        AssetDatabase.Refresh();
     }
 
     private string GetRandomLevelTexture(List<string> textureList)
@@ -111,6 +113,7 @@ public class SpawnTiles : MonoBehaviour
             if (colliders.Length == 0) return randomPosition;
             attempts++;
         }
+
         return Vector3.zero;
     }
     private void SpawnPositonTilesPrefabLevel1(GameObject tile, ref float x, ref float z)
@@ -131,7 +134,10 @@ public class SpawnTiles : MonoBehaviour
 public class LevelData
 {
     public int Level;
+    public int Coin;
     public int Star;
+    public bool Sound;
+    public bool Music;
     public List<string> TextureBlue;
     public List<string> TexturePink;
     public List<string> TexturePurple;

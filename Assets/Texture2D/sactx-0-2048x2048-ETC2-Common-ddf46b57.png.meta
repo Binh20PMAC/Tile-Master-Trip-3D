@@ -302,7 +302,7 @@ TextureImporter:
         width: 493
         height: 46
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -310,6 +310,69 @@ TextureImporter:
       bones: []
       spriteID: 16fd6482d164e1a43860bb1b810a14c3
       internalID: -227193585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sactx-0-2048x2048-ETC2-Common-ddf46b57_10
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 1702
+        width: 120
+        height: 127
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e9a0bb410664a6459500406695b34aa
+      internalID: 277237224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sactx-0-2048x2048-ETC2-Common-ddf46b57_11
+      rect:
+        serializedVersion: 2
+        x: 1001
+        y: 1010
+        width: 159
+        height: 134
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d9d8ea87a2d72c40b75f0cfc4606e3f
+      internalID: 393792009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sactx-0-2048x2048-ETC2-Common-ddf46b57_12
+      rect:
+        serializedVersion: 2
+        x: 1220
+        y: 1305
+        width: 70
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 478aefe0ba1cf454bb3d96a9073403fd
+      internalID: 2033748648
       vertices: []
       indices: 
       edges: []
@@ -334,6 +397,9 @@ TextureImporter:
       sactx-0-2048x2048-ETC2-Common-ddf46b57_2: 1253774493
       sactx-0-2048x2048-ETC2-Common-ddf46b57_5: 32886792
       sactx-0-2048x2048-ETC2-Common-ddf46b57_6: 650280492
+      sactx-0-2048x2048-ETC2-Common-ddf46b57_11: 393792009
+      sactx-0-2048x2048-ETC2-Common-ddf46b57_12: 2033748648
+      sactx-0-2048x2048-ETC2-Common-ddf46b57_10: 277237224
       sactx-0-2048x2048-ETC2-Common-ddf46b57_1: -592241443
   spritePackingTag: 
   pSDRemoveMatte: 0
