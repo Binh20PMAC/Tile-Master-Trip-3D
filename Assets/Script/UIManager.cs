@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _txtHomeStar;
     [SerializeField] private TMP_Text _txtLevelLose;
     [SerializeField] private TMP_Text _txtNumberBack;
+    [SerializeField] private TMP_Text _txtCombo;
     [SerializeField] private GameObject _gameScenePrefab;
     [SerializeField] private GameObject _backgroundPause;
     [SerializeField] private GameObject _backgroundLose;
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _backgroundGameHome;
     [SerializeField] private GameObject _backgroundPurchaseItems;
     [SerializeField] private GameObject _backgroundLoading;
+    [SerializeField] private GameObject _backgroundCombo;
     [SerializeField] private GameObject _loading;
     [SerializeField] private GameObject _gameScene;
     [SerializeField] private GameObject _star;
@@ -97,6 +99,15 @@ public class UIManager : MonoBehaviour
     {
         _txtStar.text = $"{star}";
     }
+    public void UICombo(float second, int number)
+    {
+        if (second > 0)
+        {
+            _backgroundCombo.SetActive(true);
+            _backgroundCombo.GetComponent<Image>().fillAmount = second / 10f;
+            _txtCombo.text = $"combo x{number - 1}";
+        } else _backgroundCombo.SetActive(false);
+    }
     public void AnimStar()
     {
         _star.transform.DOScale(2f, 1f).SetDelay(0f).SetEase(Ease.OutBack);
@@ -127,6 +138,7 @@ public class UIManager : MonoBehaviour
     {
         if (active) AnimOpen(_backgroundWin);
         else AnimClose(_backgroundWin);
+        _backgroundCombo.SetActive(false);
         _txtStarWin.text = $"+{star}";
         _isPaused = true;
     }
@@ -144,6 +156,7 @@ public class UIManager : MonoBehaviour
     {
         if (active) AnimOpen(_backgroundLose);
         else AnimClose(_backgroundLose);
+        _backgroundCombo.SetActive(false);
         _isPaused = active;
         _txtLevelLose.text = $"LEVEL {_spawnTiles.GetLevelDataList().Level}";
         _countdownTime = 0;
@@ -225,6 +238,7 @@ public class UIManager : MonoBehaviour
         _isPaused = false;
         _backgroundGameHome.SetActive(true);
         _backgroundGamePlay.SetActive(false);
+        _backgroundCombo.SetActive(false);
         AnimClose(_backgroundLose);
         AnimClose(_backgroundPause);
         Start();

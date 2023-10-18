@@ -16,6 +16,9 @@ public class CollectTiles : MonoBehaviour
     private bool _checkWin = false;
     private bool _canClick = true;
     private int _star = 0;
+    private int _multiCombo = 1;
+    private float _secondCombo = 0f;
+     
     private void Start()
     {
         _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
@@ -29,6 +32,7 @@ public class CollectTiles : MonoBehaviour
     {
         HoverScale();
         MoveToBoxAndCheckCollect();
+        Combo();
     }
 
     public void BackBox()
@@ -145,6 +149,15 @@ public class CollectTiles : MonoBehaviour
     {
         _canClick = true;
     }
+    private void Combo()
+    {
+        if (_secondCombo > 0 && !_uiManager.GetPause())
+        {
+            _secondCombo -= Time.deltaTime;
+            _uiManager.UICombo(_secondCombo, _multiCombo);
+        }
+        else if (_secondCombo <= 0) _multiCombo = 1;
+    }
     private IEnumerator CollectTileFromBox(int start, int end)
     {
         for (int i = start; i <= end; i++)
@@ -153,7 +166,9 @@ public class CollectTiles : MonoBehaviour
             _box[i].SetActive(false);
             _box[i] = null;
         }
-        _uiManager.SetStar(++_star);
+        _uiManager.SetStar(_star += _multiCombo);
+        ++_multiCombo;
+        _secondCombo = 10f;
         _uiManager.AnimStar();
         _audioManager.PlaySFX("Collect");
         CheckWin();

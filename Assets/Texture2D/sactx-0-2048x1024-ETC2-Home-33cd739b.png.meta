@@ -167,7 +167,7 @@ TextureImporter:
         width: 510
         height: 508
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -175,6 +175,48 @@ TextureImporter:
       bones: []
       spriteID: a155ea0bd68fc564d90739c14b1b67ce
       internalID: -1981481758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sactx-0-2048x1024-ETC2-Home-33cd739b_3
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 701
+        width: 544
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4905b8e54d831e4884426ac16b9f5fc
+      internalID: 169981554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sactx-0-2048x1024-ETC2-Home-33cd739b_4
+      rect:
+        serializedVersion: 2
+        x: 973
+        y: 646
+        width: 549
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 071b2919d9a82ab42b2ca5f70a9491b7
+      internalID: 83488799
       vertices: []
       indices: 
       edges: []
@@ -191,7 +233,9 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       sactx-0-2048x1024-ETC2-Home-33cd739b_2: -1981481758
+      sactx-0-2048x1024-ETC2-Home-33cd739b_3: 169981554
       sactx-0-2048x1024-ETC2-Home-33cd739b_1: 271922117
+      sactx-0-2048x1024-ETC2-Home-33cd739b_4: 83488799
       sactx-0-2048x1024-ETC2-Home-33cd739b_0: -787965368
   spritePackingTag: 
   pSDRemoveMatte: 0
