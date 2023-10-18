@@ -140,6 +140,7 @@ public class LevelData
     public int Level;
     public int Coin;
     public int Star;
+    public int BackTile;
     public bool Sound;
     public bool Music;
     public List<string> TextureBlue;

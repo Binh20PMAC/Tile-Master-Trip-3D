@@ -10,11 +10,11 @@ public class CollectTiles : MonoBehaviour
     [SerializeField] private Vector3 _backTransformsScale;
     [SerializeField] private Quaternion[] _backTransformsRotation;
     [SerializeField] private GameObject[] _box;
-    [SerializeField] private bool _checkWin = false;
     [SerializeField] private SpawnTiles _spawnTiles;
     [SerializeField] private UIManager _uiManager;
     [SerializeField] private AudioManager _audioManager;
     private Vector3 _originalScale;
+    private bool _checkWin = false;
     private bool _canClick = true;
     private int _star = 0;
     private void Start()
@@ -34,7 +34,9 @@ public class CollectTiles : MonoBehaviour
 
     public void BackBox()
     {
-        for(int i = _box.Length - 1; i >= 0; i--)
+        if (_spawnTiles.GetLevelDataList().BackTile == 0) return;
+        bool back = false;
+        for (int i = _box.Length - 1; i >= 0; i--)
         {
             if (_box[i] == null) continue;
             else
@@ -44,9 +46,15 @@ public class CollectTiles : MonoBehaviour
                 _box[i].transform.localScale = _backTransformsScale;
                 _box[i].tag = "Tile";
                 _box[i] = null;
+                back = true;
                 break;
             }
         }
+        if (!back) return;
+        --_spawnTiles.GetLevelDataList().BackTile;
+        string updatedJson = JsonUtility.ToJson(_spawnTiles.GetLevelDataList());
+        _spawnTiles.SetLevelDataJson(updatedJson);
+        _audioManager.PlaySFX("Back");
     }
     private void HoverScale()
     {

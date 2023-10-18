@@ -19,15 +19,18 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _txtHomeCoin;
     [SerializeField] private TMP_Text _txtHomeStar;
     [SerializeField] private TMP_Text _txtLevelLose;
+    [SerializeField] private TMP_Text _txtNumberBack;
     [SerializeField] private GameObject _backgroundPause;
     [SerializeField] private GameObject _backgroundLose;
     [SerializeField] private GameObject _backgroundWin;
     [SerializeField] private GameObject _backgroundSeting;
     [SerializeField] private GameObject _backgroundGamePlay;
     [SerializeField] private GameObject _backgroundGameHome;
+    [SerializeField] private GameObject _backgroundPurchaseItems;
     [SerializeField] private GameObject _gameScene;
     [SerializeField] private GameObject _star;
     [SerializeField] private GameObject _clock;
+    [SerializeField] private GameObject _buttonPlus;
     [SerializeField] private Sprite[] _backgroundSound;
     [SerializeField] private Sprite[] _backgroundMusic;
     [SerializeField] private Image _backgroundSoundButton;
@@ -48,11 +51,14 @@ public class UIManager : MonoBehaviour
         _txtHomeCoin.text = $"{_spawnTiles.GetLevelDataList().Coin}";
         _txtHomeLevel.text = $"{_spawnTiles.GetLevelDataList().Level}";
         _txtLevel.text = $"Lv.{_spawnTiles.GetLevelDataList().Level}";
+        _txtNumberBack.text = $"{_spawnTiles.GetLevelDataList().BackTile}";
         _txtStar.text = "0";
         _backgroundSoundButton.sprite = _backgroundSound[_spawnTiles.GetLevelDataList().Sound ? 1 : 0];
         _backgroundMusicButton.sprite = _backgroundMusic[_spawnTiles.GetLevelDataList().Music ? 1 : 0];
         _backgroundSetingSoundButton.sprite = _backgroundSound[_spawnTiles.GetLevelDataList().Sound ? 1 : 0];
         _backgroundSetingMusicButton.sprite = _backgroundMusic[_spawnTiles.GetLevelDataList().Music ? 1 : 0];
+        if (_spawnTiles.GetLevelDataList().BackTile == 0) _buttonPlus.SetActive(true);
+        else _buttonPlus.SetActive(false);
     }
     private void Update()
     {
@@ -150,12 +156,34 @@ public class UIManager : MonoBehaviour
     {
         _isPaused = false;
         AnimClose(_backgroundPause);
+        AnimClose(_backgroundPurchaseItems);
         if ($"LV.{_spawnTiles.GetLevelDataList().Level}" != _txtLevel.text) PlayGame();
         _audioManager.PlaySFX("Button");
     }
     public void BackTile()
     {
         _collectTiles.BackBox();
+        _txtNumberBack.text = $"{_spawnTiles.GetLevelDataList().BackTile}";
+        if (_buttonPlus.activeInHierarchy)
+        {
+            AnimOpen(_backgroundPurchaseItems);
+            _isPaused = true;
+        }
+        else if (_spawnTiles.GetLevelDataList().BackTile == 0) _buttonPlus.SetActive(true);
+        _audioManager.PlaySFX("Button");
+    }
+    public void Purchase()
+    {
+        _audioManager.PlaySFX("Button");
+        if (_spawnTiles.GetLevelDataList().Coin < 500) return;
+        AnimClose(_backgroundPurchaseItems);
+        _isPaused = false;
+        _spawnTiles.GetLevelDataList().Coin -= 500;
+        ++_spawnTiles.GetLevelDataList().BackTile;
+        string updatedJson = JsonUtility.ToJson(_spawnTiles.GetLevelDataList());
+        _spawnTiles.SetLevelDataJson(updatedJson);
+        _txtNumberBack.text = $"{_spawnTiles.GetLevelDataList().BackTile}";
+        _buttonPlus.SetActive(false);
     }
     public void OpenSeting()
     {
