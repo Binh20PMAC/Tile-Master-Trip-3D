@@ -1,7 +1,6 @@
 ﻿using DG.Tweening;
-using System.IO;
+using System.Collections;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +9,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private SpawnTiles _spawnTiles;
     [SerializeField] private CollectTiles _collectTiles;
     [SerializeField] private AudioManager _audioManager;
-    [SerializeField] private GameObject _gameScenePrefab;
     [SerializeField] private TMP_Text _txtStar;
     [SerializeField] private TMP_Text _txtStarWin;
     [SerializeField] private TMP_Text _txtClock;
@@ -20,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _txtHomeStar;
     [SerializeField] private TMP_Text _txtLevelLose;
     [SerializeField] private TMP_Text _txtNumberBack;
+    [SerializeField] private GameObject _gameScenePrefab;
     [SerializeField] private GameObject _backgroundPause;
     [SerializeField] private GameObject _backgroundLose;
     [SerializeField] private GameObject _backgroundWin;
@@ -27,6 +26,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _backgroundGamePlay;
     [SerializeField] private GameObject _backgroundGameHome;
     [SerializeField] private GameObject _backgroundPurchaseItems;
+    [SerializeField] private GameObject _backgroundLoading;
+    [SerializeField] private GameObject _loading;
     [SerializeField] private GameObject _gameScene;
     [SerializeField] private GameObject _star;
     [SerializeField] private GameObject _clock;
@@ -42,6 +43,7 @@ public class UIManager : MonoBehaviour
     private bool _canScale = true;
     private void Awake()
     {
+        StartCoroutine(Load());
         SpawnGameScene(false);
         _spawnTiles.SetLevelDataList();
     }
@@ -62,7 +64,8 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        UpdateTimerUI();
+        if (_backgroundGamePlay.activeInHierarchy) UpdateTimerUI();
+        else if (_backgroundLoading.activeInHierarchy) _loading.transform.Rotate(0, 0, Time.deltaTime * 50f);
     }
     private void UpdateTimerUI()
     {
@@ -82,6 +85,13 @@ public class UIManager : MonoBehaviour
             AnimClock();
             Invoke("EnableScale", 1f);
         }
+    }
+
+    private IEnumerator Load()
+    {
+        yield return new WaitForSeconds(3f);
+        _backgroundGameHome.SetActive(true);
+        _backgroundLoading.SetActive(false);
     }
     public void SetStar(int star)
     {
