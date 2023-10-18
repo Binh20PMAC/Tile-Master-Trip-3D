@@ -1,10 +1,14 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CollectTiles : MonoBehaviour
 {
     [SerializeField] private GameObject _currentHoveredTile = null;
     [SerializeField] private Transform[] _boxTransforms;
+    [SerializeField] private Vector3[] _backTransformsPositon;
+    [SerializeField] private Vector3 _backTransformsScale;
+    [SerializeField] private Quaternion[] _backTransformsRotation;
     [SerializeField] private GameObject[] _box;
     [SerializeField] private bool _checkWin = false;
     [SerializeField] private SpawnTiles _spawnTiles;
@@ -18,6 +22,9 @@ public class CollectTiles : MonoBehaviour
         _audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         _uiManager = GameObject.Find("UICode").GetComponent<UIManager>();
         _box = new GameObject[_boxTransforms.Length + 2];
+        _backTransformsPositon = new Vector3[_boxTransforms.Length + 2];
+        _backTransformsScale = _spawnTiles.GetTilePrefab().transform.localScale;
+        _backTransformsRotation = new Quaternion[_boxTransforms.Length + 2];
     }
     private void Update()
     {
@@ -25,10 +32,21 @@ public class CollectTiles : MonoBehaviour
         MoveToBoxAndCheckCollect();
     }
 
-    public void ClearBox()
+    public void BackBox()
     {
-        _currentHoveredTile = null;
-        _box = new GameObject[_boxTransforms.Length + 2];
+        for(int i = _box.Length - 1; i >= 0; i--)
+        {
+            if (_box[i] == null) continue;
+            else
+            {
+                _box[i].transform.position = _backTransformsPositon[i];
+                _box[i].transform.rotation = _backTransformsRotation[i];
+                _box[i].transform.localScale = _backTransformsScale;
+                _box[i].tag = "Tile";
+                _box[i] = null;
+                break;
+            }
+        }
     }
     private void HoverScale()
     {
@@ -72,6 +90,8 @@ public class CollectTiles : MonoBehaviour
                 {
                     BackTileFromBox(i + 1, _box.Length);
                     _box[i + 1] = _currentHoveredTile;
+                    _backTransformsPositon[i + 1] = _currentHoveredTile.transform.position;
+                    _backTransformsRotation[i + 1] = _currentHoveredTile.transform.rotation;
                     _currentHoveredTile.transform.position = _boxTransforms[i + 1].position;
                     _currentHoveredTile.transform.rotation = Quaternion.identity;
                     CheckLose();
@@ -82,6 +102,8 @@ public class CollectTiles : MonoBehaviour
                 {
                     BackTileFromBox(i + 2, _box.Length);
                     _box[i + 2] = _currentHoveredTile;
+                    _backTransformsPositon[i + 2] = _currentHoveredTile.transform.position;
+                    _backTransformsRotation[i + 2] = _currentHoveredTile.transform.rotation;
                     _currentHoveredTile.transform.position = _boxTransforms[i + 2].position;
                     _currentHoveredTile.transform.rotation = Quaternion.identity;
                     StartCoroutine(CollectTileFromBox(i, i + 2));
@@ -92,6 +114,8 @@ public class CollectTiles : MonoBehaviour
                 else if (_box[i] == null)
                 {
                     _box[i] = _currentHoveredTile;
+                    _backTransformsPositon[i] = _currentHoveredTile.transform.position;
+                    _backTransformsRotation[i] = _currentHoveredTile.transform.rotation;
                     _currentHoveredTile.transform.position = _boxTransforms[i].position;
                     _currentHoveredTile.transform.rotation = Quaternion.identity;
                     if (i >= 2)
@@ -123,6 +147,7 @@ public class CollectTiles : MonoBehaviour
             _box[i] = null;
         }
         _uiManager.SetStar(++_star);
+        _uiManager.AnimStar();
         _audioManager.PlaySFX("Collect");
         CheckWin();
     }
@@ -133,6 +158,8 @@ public class CollectTiles : MonoBehaviour
             yield return new WaitForSeconds(0.06f);
             if (_box[i] == null) continue;
             _box[i - 3] = _box[i];
+            _backTransformsPositon[i - 3] = _backTransformsPositon[i];
+            _backTransformsRotation[i - 3] = _backTransformsRotation[i];
             _box[i - 3].transform.position = _boxTransforms[i - 3].position;
             _box[i] = null;
         }
@@ -143,6 +170,8 @@ public class CollectTiles : MonoBehaviour
         {
             if (_box[i] == null) continue;
             _box[i + 1] = _box[i];
+            _backTransformsPositon[i + 1] = _backTransformsPositon[i];
+            _backTransformsRotation[i + 1] = _backTransformsRotation[i];
             _box[i + 1].transform.position = _boxTransforms[i + 1].position;
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using DG.Tweening;
+using System.IO;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private SpawnTiles _spawnTiles;
+    [SerializeField] private CollectTiles _collectTiles;
     [SerializeField] private AudioManager _audioManager;
     [SerializeField] private GameObject _gameScenePrefab;
     [SerializeField] private TMP_Text _txtStar;
@@ -24,6 +26,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _backgroundGamePlay;
     [SerializeField] private GameObject _backgroundGameHome;
     [SerializeField] private GameObject _gameScene;
+    [SerializeField] private GameObject _star;
+    [SerializeField] private GameObject _clock;
     [SerializeField] private Sprite[] _backgroundSound;
     [SerializeField] private Sprite[] _backgroundMusic;
     [SerializeField] private Image _backgroundSoundButton;
@@ -32,6 +36,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _backgroundSetingMusicButton;
     [SerializeField] private float _countdownTime = 600f;
     private bool _isPaused = false;
+    private bool _canScale = true;
     private void Awake()
     {
         SpawnGameScene(false);
@@ -55,7 +60,7 @@ public class UIManager : MonoBehaviour
     }
     private void UpdateTimerUI()
     {
-        if (_backgroundLose.activeInHierarchy) return;
+        if (_isPaused) return;
         _countdownTime -= Time.deltaTime;
         if (_countdownTime < 0)
         {
@@ -65,17 +70,49 @@ public class UIManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(_countdownTime / 60);
         int seconds = Mathf.FloorToInt(_countdownTime % 60);
         _txtClock.text = string.Format("{0:00}:{1:00}", minutes, seconds); ;
+        if (_countdownTime <= 30 && _countdownTime > 0 && _canScale)
+        {
+            _canScale = false;
+            AnimClock();
+            Invoke("EnableScale", 1f);
+        }
     }
     public void SetStar(int star)
     {
         _txtStar.text = $"{star}";
     }
+    public void AnimStar()
+    {
+        _star.transform.DOScale(2f, 1f).SetDelay(0f).SetEase(Ease.OutBack);
+        _star.transform.DOScale(1f, 2f).SetDelay(0.1f).SetEase(Ease.OutBack);
+    }
+    public void AnimClock()
+    {
+        _clock.transform.DOScale(1.5f, 1f).SetDelay(0f).SetEase(Ease.OutBack);
+        _clock.transform.DOScale(1f, 1.5f).SetDelay(0.3f).SetEase(Ease.OutBack);
+    }
+    public void AnimOpen(GameObject bg)
+    {
+        bg.transform.DOScale(1.1f, 1f).SetDelay(0f).SetEase(Ease.OutBack);
+        bg.transform.DOScale(1f, 1.1f).SetDelay(0.1f).SetEase(Ease.OutBack);
+    }
+    public void AnimClose(GameObject bg)
+    {
+        if (bg.transform.localScale == Vector3.zero) return;
+        bg.transform.DOScale(1.1f, 1f).SetDelay(0f).SetEase(Ease.OutBack);
+        bg.transform.DOScale(0f, 1.1f).SetDelay(0.1f);
+    }
 
+    private void EnableScale()
+    {
+        _canScale = true;
+    }
     public void SetActiveWin(bool active, int star)
     {
-        _backgroundWin.SetActive(active);
+        if (active) AnimOpen(_backgroundWin);
+        else AnimClose(_backgroundWin);
         _txtStarWin.text = $"+{star}";
-        Time.timeScale = 0;
+        _isPaused = true;
     }
     private void SpawnGameScene(bool active)
     {
@@ -83,12 +120,14 @@ public class UIManager : MonoBehaviour
         GameObject newGameScene = Instantiate(_gameScenePrefab);
         newGameScene.name = _gameScenePrefab.name;
         _spawnTiles = newGameScene.GetComponentInChildren<SpawnTiles>();
+        _collectTiles = newGameScene.GetComponentInChildren<CollectTiles>();
         _gameScene = newGameScene;
         newGameScene.SetActive(active);
     }
     public void SetActiveLose(bool active)
     {
-        _backgroundLose.SetActive(active);
+        if (active) AnimOpen(_backgroundLose);
+        else AnimClose(_backgroundLose);
         _isPaused = active;
         _txtLevelLose.text = $"LEVEL {_spawnTiles.GetLevelDataList().Level}";
         _countdownTime = 0;
@@ -102,42 +141,43 @@ public class UIManager : MonoBehaviour
     public void Pause()
     {
         _isPaused = true;
-        _backgroundPause.SetActive(true);
-        _backgroundWin.SetActive(false);
-        _backgroundLose.SetActive(false);
-        Time.timeScale = 0;
+        AnimOpen(_backgroundPause);
+        AnimClose(_backgroundWin);
+        AnimClose(_backgroundLose);
         _audioManager.PlaySFX("Button");
     }
     public void Continute()
     {
         _isPaused = false;
-        _backgroundPause.SetActive(false);
-        Time.timeScale = 1f;
+        AnimClose(_backgroundPause);
         if ($"LV.{_spawnTiles.GetLevelDataList().Level}" != _txtLevel.text) PlayGame();
         _audioManager.PlaySFX("Button");
     }
+    public void BackTile()
+    {
+        _collectTiles.BackBox();
+    }
     public void OpenSeting()
     {
-        _backgroundSeting.SetActive(true);
+        AnimOpen(_backgroundSeting);
         _audioManager.PlaySFX("Button");
     }
     public void CloseSeting()
     {
-        _backgroundSeting.SetActive(false);
+        AnimClose(_backgroundSeting);
         _audioManager.PlaySFX("Button");
     }
     public void PlayGame()
     {
         _txtStar.text = "0";
         _txtLevel.text = $"LV.{_spawnTiles.GetLevelDataList().Level}";
-        _countdownTime = 540f + (_spawnTiles.GetLevelDataList().Level * 60);
+        _countdownTime = 240f + (_spawnTiles.GetLevelDataList().Level * 60);
         _isPaused = false;
-        Time.timeScale = 1f;
         _backgroundGamePlay.SetActive(true);
         _backgroundGameHome.SetActive(false);
-        _backgroundWin.SetActive(false);
-        _backgroundLose.SetActive(false);
-        _backgroundSeting.SetActive(false);
+        AnimClose(_backgroundWin);
+        AnimClose(_backgroundLose);
+        AnimClose(_backgroundSeting);
         SpawnGameScene(true);
         _audioManager.PlaySFX("Button");
     }
@@ -147,8 +187,8 @@ public class UIManager : MonoBehaviour
         _isPaused = false;
         _backgroundGameHome.SetActive(true);
         _backgroundGamePlay.SetActive(false);
-        _backgroundPause.SetActive(false);
-        _backgroundLose.SetActive(false);
+        AnimClose(_backgroundLose);
+        AnimClose(_backgroundPause);
         Start();
         Destroy(_gameScene);
         _audioManager.PlaySFX("Button");

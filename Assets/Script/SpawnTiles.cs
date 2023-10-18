@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DG.Tweening;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -18,6 +19,9 @@ public class SpawnTiles : MonoBehaviour
         SetLevelDataList();
         SpawnTilesPrefab();
     }
+
+    public GameObject GetTilePrefab()
+    { return _tilePrefab; }
     public List<GameObject> GetTileList()
     {
         return _tileList;

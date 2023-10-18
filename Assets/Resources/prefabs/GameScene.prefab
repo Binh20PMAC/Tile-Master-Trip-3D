@@ -490,6 +490,7 @@ MonoBehaviour:
   _checkWin: 0
   _spawnTiles: {fileID: 9110935858513647694}
   _uiManager: {fileID: 0}
+  _audioManager: {fileID: 0}
 --- !u!1 &9110935859114264965
 GameObject:
   m_ObjectHideFlags: 0
